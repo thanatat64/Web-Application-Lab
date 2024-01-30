@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <div id="maincontainer">
+            
+        </div>
+        <script>
+            let main = document.getElementById("maincontainer")
+
+
+            let head = document.createElement("h2")
+            head.innerHTML = "Exercise 04: JavaScript & DOM"
+
+            let pass2 = document.createElement("br")
+            let pass3 = document.createElement("br")
+            
+
+            let date_button = document.createElement("button")
+            date_button.innerHTML ="Click me to display Date and Time"
+
+            let display_date_time = document.createElement('div')
+            display_date_time.style.border = '2px solid black'
+            display_date_time.style.position = 'fixed'
+            display_date_time.style.width = 'fit-content'
+            display_date_time.style.height = '18px'
+            display_date_time.style.fontSize = '15px'
+            display_date_time.style.top = '0'
+            display_date_time.style.right = '0'
+            display_date_time.style.marginTop = '1px'
+            display_date_time.style.marginRight = '1px'
+            display_date_time.hidden = true
+            
+            let color = ['LightSalmon', 'LightGoldenRodYellow', 'LightCyan', , 'LightGreen', 'LightPink', 'PeachPuff']
+            let current_color = 0
+            function blink_color(){
+                display_date_time.style.backgroundColor = color[current_color]
+                current_color += 1
+                current_color %= color.length
+            }
+
+            let The_worker = null
+            
+            function worker_process(){
+                let w = new Worker('worker.js')
+                date_button.hidden = true
+                blink_color()
+                display_date_time.innerHTML = new Date().toString()
+                display_date_time.hidden = false
+                w.onmessage = (event) => {
+                    display_date_time.innerHTML = event.data
+                    blink_color()
+                }
+                return w
+
+            }
+
+            function terminate_worker(){
+                The_worker.terminate()
+            }
+
+            date_button.onclick = function(){
+                The_worker = worker_process()
+            }
+            
+            //fix under
+            display_date_time.onclick = function(){
+                if (display_date_time.style.position == 'fixed') {
+                    terminate_worker()
+                    display_date_time.style.position = 'relative'
+                    // date_button.style.display = 'none'
+                }
+                else{
+                    The_worker = worker_process()
+                    display_date_time.style.position = 'fixed'
+                    // date_button.style.display = 'block'
+                    // date_button.style.paddingBottom = '5px'
+                }
+            }
+            
+            
+            let info_button = document.createElement("a")
+            info_button.innerHTML = "Personal Info"
+            info_button.href = "#"
+            info_button.addEventListener('mouseover',function(){
+                info_button.style.backgroundColor = "Cornsilk";
+                info_button.style.color = "DarkSlateGrey"
+            });
+            info_button.addEventListener('mouseout',function(){
+                info_button.style.backgroundColor = "white"
+                info_button.style.color = "Coral"
+            });
+
+            let personal_data = document.createElement("ul")
+            personal_data.hidden = true
+            info_button.onclick = function(){
+                personal_data.hidden = !personal_data.hidden
+            }
+            let data1 = document.createElement("li")
+            data1.innerHTML = "Thanatat Chongkittisakul, ID: 64010312"
+            let data2 = document.createElement("li")
+            data2.innerHTML = "Subject: Web Application Development"
+            let data3 = document.createElement("li")
+            data3.innerHTML = "Semester: 2/2565"
+
+
+            let snapshot = document.createElement("h1")
+            snapshot.innerHTML = "Snapshots"
+            let snap_choice = document.createElement("ul")
+
+            let snap1 = document.createElement("li")
+            let meme1_button = document.createElement("a")
+            meme1_button.innerHTML = "meme1"
+            meme1_button.href = "#"
+            snap1.appendChild(meme1_button)
+            meme1_button.onclick = function(){
+                changeImage('https://i.guim.co.uk/img/media/327e46c3ab049358fad80575146be9e0e65686e7/0_0_1023_742/master/1023.jpg?width=465&quality=85&dpr=1&s=none')
+            }
+            let snap2 = document.createElement("li")
+            let meme2_button = document.createElement("a")
+            meme2_button.innerHTML = "meme2"
+            meme2_button.href = "#"
+            snap2.appendChild(meme2_button)
+            meme2_button.onclick = function(){
+                changeImage('https://static.freemake.com/blog/wp-content/uploads/2012/08/troll-face.jpg')
+            }
+            let snap3 = document.createElement("li")
+            let meme3_button = document.createElement("a")
+            meme3_button.innerHTML = "meme3"
+            meme3_button.href = "#"
+            snap3.appendChild(meme3_button)
+            meme3_button.onclick = function(){
+                changeImage('https://i.pinimg.com/474x/c4/fe/0d/c4fe0dfe375cdf1dbf2c385c2beb2df6.jpg')
+            }
+            let snap4 = document.createElement("li")
+            let meme4_button = document.createElement("a")
+            meme4_button.innerHTML = "meme4"
+            meme4_button.href = "#"
+            snap4.appendChild(meme4_button)
+            meme4_button.onclick = function(){
+                changeImage('https://images.complex.com/complex/images/c_fill,dpr_auto,f_auto,q_90,w_1400/fl_lossy,pg_1/bdnkabiqxpxmxzmcaluz/spider-man-meme')
+            }
+            
+
+            let imgZone = document.createElement("div")
+            let banner = document.createElement("img")
+            banner.src = "https://cdn.pixabay.com/photo/2021/09/12/07/58/banner-6617550_960_720.png"
+            banner.height = 200
+            banner.id = 'bannerimg'
+            function changeImage(URL){
+                let img = document.querySelector('#bannerimg');
+                img.setAttribute('src', URL);
+            }
+
+            personal_data.appendChild(data1)
+            personal_data.appendChild(data2)
+            personal_data.appendChild(data3)
+            snap_choice.appendChild(snap1)
+            snap_choice.appendChild(snap2)
+            snap_choice.appendChild(snap3)
+            snap_choice.appendChild(snap4)
+            imgZone.appendChild(banner)
+            
+            main.appendChild(head)
+            main.appendChild(date_button)
+            main.appendChild(display_date_time)
+            main.appendChild(pass2)
+            main.appendChild(pass3)
+            main.appendChild(info_button)
+            main.appendChild(personal_data)
+            main.appendChild(snapshot)
+            main.appendChild(snap_choice) 
+            main.appendChild(imgZone)
+            
+              
+        </script>
+    </body>
+</html>
